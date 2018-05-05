@@ -8,7 +8,7 @@ class Sensor:
         self.ds  = onewire.DS18B20(onewire.OneWire(self.dat))
 
         self.ds.reset()
-        self.ds.select()
+        self.ds.select(addr)
         self.ds.write(0x4E)
         self.ds.write(0x00)
         self.ds.write(0x00)
