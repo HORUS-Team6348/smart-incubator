@@ -1,29 +1,35 @@
 import esp
+import picoweb
+import machine
 import network
 from temperature import DS18B20x
 
 ESSID   = "Incubator-1"
-IP      = "192.168.0.1"
-SUBNET  = "255.255.255.0"
-GATEWAY = "192.168.0.1"
-DNS     = "8.8.8.8"
-
 
 incubator_temperature = DS18B20x(12)
 peltier_temperature   = DS18B20x(13)
+
+timer = machine.Timer(0)
+
+counter = 0
 
 
 def nodebug():
     esp.osdebug(None)
 
 
-def init():
-    ap = network.WLAN(network.STA_IF)
-    ap.active(True)
-    ap.config(essid=ESSID)
+def timerIRQ():
+    global counter
+    counter += 1
+    print("IRQ here!")
+    print(counter)
 
-    incubator_temperature.init()
-    peltier_temperature.init()
+
+def init():
+    ap = network.WLAN(network.AP_IF)
+    ap.active(True) 
+
+    timer.init(period=380, mode=machine.Timer.PERIODIC, callback=timerIRQ)
 
 
 init()
