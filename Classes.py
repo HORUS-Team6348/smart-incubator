@@ -1,13 +1,14 @@
+import machine
+import onewire
+
 class Sensor:
 
-    def config(self, pin, resolution):
-        import machine
-        import onewire
+    def __init__(self, pin, resolution):
         self.dat = machine.Pin(pin)
         self.ds  = onewire.DS18B20(onewire.OneWire(self.dat))
 
         self.ds.reset()
-        self.select()
+        self.ds.select()
         self.ds.write(0x4E)
         self.ds.write(0x00)
         self.ds.write(0x00)
@@ -15,12 +16,8 @@ class Sensor:
             self.ds.write(0x1f)
         if resolution == "10":
             self.ds.write(0x3f)
-        if resolution =="11":
+        if resolution == "11":
             self.ds.write(0x5f)
-
-
-
-
 
 
     def init_read(self, ds):
